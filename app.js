@@ -91,7 +91,7 @@ let item1 = {
         영화감독: item5.director,
         개봉년도: item5.year,
         장르: item5.genre,
-        줄거리리: item5.summary
+        줄거리: item5.summary
         });
     } else {
         //범위를 벗어난 경우
