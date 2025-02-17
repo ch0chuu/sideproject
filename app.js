@@ -72,6 +72,7 @@ app.get('/item/:id', function (req, res) {
     
     app.post("/movie", (req, res) => {
         console.log(req.body)
+        const { title, director, year, genre, summary } = req.body;
     
         db.set(6, req.body)
       
