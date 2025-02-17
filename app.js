@@ -47,57 +47,38 @@ let item1 = {
     summary: "재즈 피아니스트와 배우 지망생이 꿈을 좇아가는 로맨틱 뮤지컬..."
   }
 
-  app.get('/item/:id', (req,res) => {
+let db = new Map()
+db.set(1, item1)
+db.set(2, item2)
+db.set(3, item3)
+db.set(4, item4)
+db.set(5, item5)
 
-    let { id } = req.params
-    id = parseInt(id)
+app.get('/item/:id', function (req, res) {
+    let { id } = req.params;
+    id = parseInt(id);
 
-
-    if (id === 1) {
-        return res.json({
-        영화제목: item1.title,
-        영화감독: item1.director,
-        개봉년도: item1.year,
-        장르: item1.genre,
-        줄거리: item1.summary
-        });
-    } else if (id === 2) {
-        return res.json({
-        영화제목: item2.title,
-        영화감독: item2.director,
-        개봉년도: item2.year,
-        장르: item2.genre,
-        줄거리: item2.summary
-        });
-    } else if (id === 3) {
-        return res.json({
-        영화제목: item3.title,
-        영화감독: item3.director,
-        개봉년도: item3.year,
-        장르: item3.genre,
-        줄거리: item3.summary
-        });
-    } else if (id === 4) {
-        return res.json({
-        영화제목: item4.title,
-        영화감독: item4.director,
-        개봉년도: item4.year,
-        장르: item4.genre,
-        줄거리: item4.summary
-        });
-    } else if (id === 5) {
-        return res.json({
-        영화제목: item5.title,
-        영화감독: item5.director,
-        개봉년도: item5.year,
-        장르: item5.genre,
-        줄거리: item5.summary
+    const movie = db.get(id);
+    if (movie === undefined) {
+        res.json({
+            message: "영화 정보를 찾을 수 없습니다."
         });
     } else {
-        //범위를 벗어난 경우
-        return res.status(404).json({ error: "영화 정보를 찾을 수 없습니다" });
+        res.json(movie);
+    }
+});
+
+    app.use(express.json())
     
-    }})
+    app.post("/movie", (req, res) => {
+        console.log(req.body)
+    
+        db.set(6, req.body)
+      
+        return res.json({
+          message: `${title}에 대한 영화 등록을 마쳤습니다!`
+        });
+      });
 
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
