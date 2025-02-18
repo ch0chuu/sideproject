@@ -1,6 +1,3 @@
-const express = require("express")
-const app = express()
-const port = 1234
 
 let item1 = {
     id: 1,
@@ -47,41 +44,14 @@ let item1 = {
     summary: "재즈 피아니스트와 배우 지망생이 꿈을 좇아가는 로맨틱 뮤지컬..."
   }
 
-let db = new Map()
-db.set(1, item1)
-db.set(2, item2)
-db.set(3, item3)
-db.set(4, item4)
-db.set(5, item5)
+  let db = new Map ([
+    [1, item1],
+    [2, item2],
+    [3, item3],
+    [4, item4],
+    [5, item5]
+  ])
 
-app.get('/item/:id', function (req, res) {
-    let { id } = req.params;
-    id = parseInt(id);
+  let id = 6
 
-    const movie = db.get(id);
-    if (movie === undefined) {
-        res.json({
-            message: "영화 정보를 찾을 수 없습니다."
-        });
-    } else {
-        res.json(movie);
-    }
-});
-
-    app.use(express.json())
-    
-    app.post("/movie", (req, res) => {
-        console.log(req.body)
-        const { title, director, year, genre, summary } = req.body;
-    
-        db.set(6, req.body)
-      
-        return res.json({
-          message: `${title}에 대한 영화 등록을 마쳤습니다!`
-        });
-      });
-
-    app.listen(port, () => {
-        console.log(`Example app listening on port ${port}`)
-    })
-  
+  module.exports = {db, id}
