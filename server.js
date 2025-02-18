@@ -4,6 +4,7 @@ const app = express()
 const port = 1901
 
 const { db, id } = require("./data") // data.js에서 db 가져오기
+const mariadb = require('./database/connect/mariadb') // mariadb 연동
 
 app.use(express.json())
 
