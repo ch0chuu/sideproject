@@ -44,7 +44,7 @@ app.post("/items", (req, res) => {
         res.json({ message: "정보를 모두 입력해 주세요." })
     } else {
         //서버 재가동 이후 중복 방지
-        const id = db.size > 0 ? Math.max(...db.keys()) + 1 : 1
+        const id = db.size > 0 ? Math.max(...db.keys()) + 1 : 6
 
         //배열
         let genreArray

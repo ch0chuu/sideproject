@@ -1,6 +1,6 @@
 const mariadb = require('mysql')
 
-const conn = mariadb.createConnection(
+const conn = mariadb.createPool(
     {
         host: 'localhost',
         port: 3306,
