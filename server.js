@@ -4,8 +4,10 @@ const app = express()
 const port = 1901
 
 const { pool, getDBConnection } = require('./database/connect/mariadb')  // mariadb
+const userRoutes = require("./routes/user") //user.js
 
 app.use(express.json())
+app.use("/users", userRoutes)
 
 //모든 영화 조회
 app.get("/items", async function (req, res) {
