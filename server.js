@@ -1,7 +1,7 @@
 const express = require("express")
 
 const app = express()
-const port = 1901
+const port = 3000
 
 const { pool, getDBConnection } = require('./database/connect/mariadb')  // mariadb
 const userRoutes = require("./routes/user") //user.js
