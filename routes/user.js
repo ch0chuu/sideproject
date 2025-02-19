@@ -4,14 +4,14 @@ const { pool } = require("../database/connect/mariadb"); // DB 연결 가져오�
 
 // 로그인 (POST)
 router.post("/login", async (req, res) => {
-    const { id, pwd } = req.body
+    const { username, pwd } = req.body
 
-    if (!id || !pwd) {
+    if (!username || !pwd) {
         return res.status(400).json({ message: "ID와 비밀번호를 입력하세요." })
     }
 
     try {
-        const [rows] = await pool.query("SELECT name FROM users WHERE id = ? AND pwd = ?", [id, pwd])
+        const [rows] = await pool.query("SELECT name FROM users WHERE username = ? AND pwd = ?", [username, pwd])
 
         if (rows.length === 0) {
             return res.status(401).json({ message: "ID 또는 비밀번호가 일치하지 않습니다." })
@@ -26,20 +26,20 @@ router.post("/login", async (req, res) => {
 
 //  회원 가입 (POST)
 router.post("/register", async (req, res) => {
-    const { id, pwd, name } = req.body
+    const { username, pwd, name } = req.body
 
-    if (!id || !pwd || !name) {
+    if (!username || !pwd || !name) {
         return res.status(400).json({ message: "모든 정보를 입력하세요." })
     }
 
     try {
-        //ID 중복 체크
-        const [existingUser] = await pool.query("SELECT id FROM users WHERE id = ?", [id])
+        // 아이디 중복 체크
+        const [existingUser] = await pool.query("SELECT username FROM users WHERE username = ?", [username])
         if (existingUser.length > 0) {
             return res.status(409).json({ message: "이미 존재하는 ID입니다." })
         }
 
-        await pool.query("INSERT INTO users (id, pwd, name) VALUES (?, ?, ?)", [id, pwd, name])
+        await pool.query("INSERT INTO users (username, pwd, name) VALUES (?, ?, ?)", [username, pwd, name])
 
         res.status(201).json({ message: `${name}님 환영합니다` })
     } catch (err) {
