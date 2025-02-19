@@ -1,6 +1,6 @@
 const mariadb = require('mysql')
 
-const conn = mariadb.createPool(
+const pool = mariadb.createPool(
     {
         host: 'localhost',
         port: 3306,
@@ -9,6 +9,10 @@ const conn = mariadb.createPool(
         database : 'movie_db'
     }
 
-);
+)
 
-module.exports = conn
+async function getDBConnection() {
+    return await pool.getConnection()
+}
+
+module.exports = {pool, getDBConnection}
