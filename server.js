@@ -39,6 +39,54 @@ app.get("/items", async function (req, res) {
     }
 })
 
+//특정 genre로 영화 조회
+app.get("/items/genre", async function (req, res) {
+    const { genres } = req.query // 쿼리 파라미터에서 genres 가져오기
+
+    if (!genres) {
+        return res.status(400).json({ message: "장르를 입력해 주세요. (예: ?genres=로맨스,액션)" })
+    }
+
+    const genreList = genres.split(",").map(g => g.trim()) // 입력값을 배열로 변환
+    let placeholders = [];
+    for (let i = 0; i < genreList.length; i++) {
+        placeholders.push("?"); // 배열에 '?' 추가
+    }
+    placeholders = placeholders.join(", "); // 배열을 문자열로 변환
+
+    try {
+        const [movies] = await pool.query(
+            `SELECT m.id, m.title, m.author, m.year, m.summary, 
+                    GROUP_CONCAT(g.name ORDER BY g.name ASC) AS genre
+             FROM movies m
+             LEFT JOIN movie_genres mg ON m.id = mg.movie_id
+             LEFT JOIN genres g ON mg.genre_id = g.id
+             WHERE g.name IN (${placeholders}) 
+             GROUP BY m.id`,
+            genreList
+        )
+
+        if (!movies || movies.length === 0) {
+            return res.status(404).json({ message: `"${genres}" 장르의 작품이 없습니다.` })
+        }
+
+        const moviesWithGenres = movies.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            author: movie.author,
+            year: movie.year,
+            summary: movie.summary,
+            genre: movie.genre ? movie.genre.split(",") : []
+        }))
+
+        res.status(200).json(moviesWithGenres)
+    } catch (err) {
+        console.error("Database query error:", err)
+        res.status(500).json({ error: "Database query failed." })
+    }
+})
+
+
 //특정 id의 영화 조회
 app.get("/items/:id", async function (req, res) {
     let { id } = req.params
@@ -61,7 +109,7 @@ app.get("/items/:id", async function (req, res) {
             return res.json({ error: "작품을 찾을 수 없습니다." })
         }
 
-        const movieData = movie[0][0] // 🔥 mysql2 방식 적용
+        const movieData = movie[0][0] // mysql2 방식 적용
         console.log("movieData:", movieData)
         console.log("genre 변환 후:", movieData.genre ? movieData.genre.split(",").map(g => g.trim()) : [])
         
