@@ -23,4 +23,4 @@
 - **Database**: MariaDB (mysql2/promise)
 - **Environment**: Docker (옵션)
 
-## 📂 프로젝트 구조
+
